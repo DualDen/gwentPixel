@@ -1,18 +1,29 @@
-
 const express = require('express');
-
 const app = express();
 
-const rooms = new Map([
+const server = require('http').Server(app);
 
-]);
-
-app.get("/rooms",(req,res) => {
-
-    res.json(rooms)
+const io = require('socket.io')(server,{
+    cors: {
+        origin: '*',
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        credentials: true
+    }
 });
 
-app.listen(9999, (err) => {
+const rooms = new Map();
+
+
+app.get("/rooms",(req,res) => {
+    res.json(rooms);
+});
+
+io.on('connection',(socket) => {
+    console.log('user connected',socket.id);
+})
+
+server.listen(9999, (err) => {
     if(err) {
         throw Error(err)
     }

@@ -1,6 +1,7 @@
-import './App.css';
-import queryString from "query-string"
-import Game from "./components/Game";
+import React from "react";
+
+import Join from "./components/Join/Join";
+
 
 
 
@@ -9,7 +10,7 @@ import Game from "./components/Game";
 function App() {
   return (
     <div className="App">
-      <Game/>
+        <Join hello={"20"}/>
     </div>
   );
 }
