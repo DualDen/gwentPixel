@@ -1,16 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './style.css'
-import socket from "../../features/socket";
+import axios from "axios";
+
+
+
+
 
 const Join = ({hello}) => {
+    const [roomId,setRoomId] = useState("");
+    const [userName,setUserName] = useState("");
+    const onEnter = () => {
+        if(!userName || !roomId) {
+            alert("Введите данные")
+        }
+        axios.post("/rooms", {
+            roomId,
+            userName
+        })
+    }
     return (
         <div className='wrapper'>
             <div className="joinBlock">
-                <input type="text" placeholder='Room ID' defaultValue=''/>
-                <input type="text" placeholder='Ваше имя' defaultValue=''/>
-                <button onClick={() => {
-                    socket();
-                }} className="btn btn-success">ВОЙТИ</button>
+                <input onChange={e => setRoomId(e.target.value)} type="text" placeholder='Room ID' value={roomId}/>
+                <input onChange={e => setUserName(e.target.value)} type="text" placeholder='Ваше имя' value={userName}/>
+                <button onClick={onEnter} className="btn btn-success">ВОЙТИ</button>
             </div>
         </div>
     );
