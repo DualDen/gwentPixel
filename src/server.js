@@ -20,6 +20,7 @@ app.get("/rooms", (req, res) => {
     res.json(rooms);
 });
 
+
 app.post('/rooms', (req , res) => {
     const {roomId, userName} = req.body;
     if (!rooms.has(roomId)) {
@@ -28,10 +29,14 @@ app.post('/rooms', (req , res) => {
             ['messages', []],
         ]));
     }
-    res.json(rooms);
+    res.json([...rooms.values()]);
 })
 
 io.on('connection', (socket) => {
+    socket.on('ROOM:JOIN', (data) => {
+        console.log(data);
+    })
+
     console.log('user connected', socket.id);
 })
 
