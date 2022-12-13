@@ -37,6 +37,7 @@ function App() {
         socket.emit("ROOM:JOIN",obj);
     }
     console.log(state);
+    window.socket = socket;
   return (
     <div className="App">
         {!state.joined && <Join onLogin={onLogin}/>}
