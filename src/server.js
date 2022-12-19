@@ -29,16 +29,28 @@ app.post('/rooms', (req , res) => {
             ['messages', []],
         ]));
     }
-    res.json([...rooms.values()]);
+    res.send();
 })
 
 io.on('connection', (socket) => {
-    socket.on('ROOM:JOIN', (data) => {
-        console.log(data);
+    socket.on('ROOM:JOIN', ({roomId, userName}) => {
+        socket.join(roomId);
+        rooms.get(roomId).get('users').set(socket.id,userName);
+        const users =  [...rooms.get(roomId).get('users').values()];
+        socket.broadcast.to(roomId).emit("ROOM:JOINED",users);
+    });
+    socket.on("disconnected", () => {
+        rooms.forEach((value,roomId) => {
+            if(value.get('users').delete(socket.id)) {
+                const users =  [...value.get('users').values()];
+                socket.broadcast.to(roomId).emit("ROOM:SET_USERS",users);
+            }
+        });
     })
 
     console.log('user connected', socket.id);
 })
+
 
 server.listen(9999, (err) => {
     if (err) {
